@@ -37,14 +37,11 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    """Вьюсет для получения информации по группам, только для админов."""
+    """Вьюсет для получения информации по группам."""
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAdminUser]
-
-    # def retrieve(self, request, *args, **kwargs):
-    #     return super().retrieve(request, *args, **kwargs)
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class PostViewSet(viewsets.ModelViewSet):
