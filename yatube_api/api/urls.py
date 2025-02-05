@@ -1,5 +1,5 @@
-from rest_framework import routers
 from django.urls import path, re_path
+from rest_framework import routers
 from rest_framework.authtoken import views
 
 from api.views import CommentViewSet, GroupViewSet, PostViewSet
