@@ -1,8 +1,6 @@
 from django.core.exceptions import PermissionDenied
-from rest_framework import permissions, status, viewsets
-from rest_framework.response import Response
-
 from posts.models import Comment, Group, Post
+from rest_framework import viewsets
 
 from .serializers import CommentSerializer, GroupSerializer, PostSerializer
 
@@ -11,7 +9,6 @@ class CommentViewSet(viewsets.ModelViewSet):
     """Вьюсет управления комментариями."""
 
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         """Фильтрация комментариев по post_id."""
@@ -45,11 +42,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def create(self, request, *args, **kwargs):
-        """Запрет создания групп через Api."""
-        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    http_method_names = ['get']
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -57,7 +50,6 @@ class PostViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         """Создает объект автора."""
