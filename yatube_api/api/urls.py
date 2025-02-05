@@ -23,16 +23,16 @@ router.register(r'group', GroupViewSet)
 router.register(r'posts', PostViewSet)
 
 urlpatterns = [
+    path('api-token-auth/', views.obtain_auth_token),
     re_path(
         r'^posts/(?P<post_id>\d+)/comments/$',
         comment_list,
         name='comment-list'
     ),
     re_path(
-        r'^posts/(?P<post_id>\d+)/comments/(?P<comment_id>\d+)/$',
+        r'^posts/(?P<post_id>\d+)/comments/(?P<pk>\d+)/$',
         comment_detail,
         name='comment-detail'
     ),
-    path('api-token-auth/', views.obtain_auth_token),
 ]
 urlpatterns += router.urls
