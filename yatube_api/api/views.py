@@ -43,6 +43,10 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        """Запрет создания групп через Api."""
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
 
 class PostViewSet(viewsets.ModelViewSet):
     """Вьюсет управления постами."""
