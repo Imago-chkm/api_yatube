@@ -19,7 +19,7 @@ comment_detail = CommentViewSet.as_view({
 })
 
 router = routers.SimpleRouter()
-router.register(r'group', GroupViewSet)
+router.register(r'groups', GroupViewSet)
 router.register(r'posts', PostViewSet)
 
 urlpatterns = [

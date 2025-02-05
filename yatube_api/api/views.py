@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from django.core.exceptions import PermissionDenied
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,6 +11,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     """Вьюсет управления комментариями."""
 
     serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         """Фильтрация комментариев по post_id."""
@@ -36,10 +37,14 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ModelViewSet):
-    """Вьюсет для получения информации по группам, только GET запросы."""
+    """Вьюсет для получения информации по группам, только для админов."""
 
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+    # def retrieve(self, request, *args, **kwargs):
+    #     return super().retrieve(request, *args, **kwargs)
 
 
 class PostViewSet(viewsets.ModelViewSet):
@@ -47,6 +52,7 @@ class PostViewSet(viewsets.ModelViewSet):
 
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
         """Проверка прав на изменение контента."""
