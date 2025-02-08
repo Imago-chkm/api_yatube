@@ -1,9 +1,9 @@
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
-from rest_framework import mixins, viewsets
+from rest_framework import viewsets
 
 from .serializers import CommentSerializer, GroupSerializer, PostSerializer
-from posts.models import Comment, Group, Post
+from posts.models import Group, Post
 
 
 class CommentViewSet(viewsets.ModelViewSet):
@@ -11,18 +11,20 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     serializer_class = CommentSerializer
 
+    def get_post(self):
+        """Получение поста."""
+        return get_object_or_404(Post, id=self.kwargs.get('post_id'))
+
     def get_queryset(self):
         """Фильтрация комментариев по post_id."""
-        post_id = self.kwargs.get('post_id')
-        if post_id:
-            return Comment.objects.filter(post_id=post_id)
-        return Comment.objects.none()
+        post = self.get_post()
+        return post.comments.all()
 
     def perform_create(self, serializer):
         """Создает объект автора и поста."""
         serializer.save(
             author=self.request.user,
-            post=get_object_or_404(Post, id=self.kwargs.get('post_id'))
+            post=self.get_post()
         )
 
     def perform_update(self, serializer):
@@ -38,11 +40,7 @@ class CommentViewSet(viewsets.ModelViewSet):
         return super().perform_destroy(instance)
 
 
-class GroupViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    viewsets.GenericViewSet
-):
+class GroupViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
 
